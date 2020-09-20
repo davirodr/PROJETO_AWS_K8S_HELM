@@ -1,0 +1,5 @@
+---
+# tasks file for criando-instancias
+- include: provisioning.yml
+
+

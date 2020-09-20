@@ -1,0 +1,19 @@
+- name: Instalando Helm
+  shell: curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+- name: Adicionando Repo Helm
+  command: 
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/ --force-update
+    helm repo add nginx https://helm.nginx.com/stable --force-update
+
+- name: Update do Repo Helm
+  command: 
+    helm repo update
+
+- name: Instando Nginx de Teste com Helm
+  command:
+    helm install my-ingress-controller nginx/nginx-ingress
+
+- name: Removendo Nginx de Teste
+  command:
+    helm uninstall my-ingress-controller
