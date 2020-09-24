@@ -34,10 +34,25 @@
     count: "{{ count }}"
   register: ec2
 
+- name: Adicionando Ip privado no arquivo hosts
+  add_host: 
+    name: "{{ item.private_ip }}" 
+    groups: private-new
+  with_items: "{{ ec2.instances }}"
+ 
+- name: Adicionando o IP privado da instancia criada ao arquivo hosts
+  local_action: 
+    module: lineinfile
+    dest: "./hosts"
+    regexp: "{{ item.private_ip }}"
+    insertafter: '[private]' 
+    line: "{{ item.private_ip }}"
+  with_items: "{{ ec2.instances }}"
+
 - name: Adicionando a instancia ao inventario temp
   add_host: 
     name: "{{ item.public_ip }}" 
-    groups: giropops-new
+    groups: public-new
   with_items: "{{ ec2.instances }}"
 
 - name: Adicionando o IP publico da instancia criada ao arquivo hosts
@@ -45,18 +60,8 @@
     module: lineinfile
     dest: "./hosts"
     regexp: "{{ item.public_ip }}"
-    insertafter: "[kubernetes]" 
+    insertbefore: '[kubernetes]'
     line: "{{ item.public_ip }}"
-  with_items: "{{ ec2.instances }}"
-
-
-- name: Adicionando o IP privado da instancia criada ao arquivo hosts
-  local_action: 
-    module: lineinfile
-    dest: "./hosts"
-    regexp: "{{ item.private_ip }}"
-    insertafter: "[kubernetes]" 
-    line: "{{ item.private_ip }}"
   with_items: "{{ ec2.instances }}"
 
 - name: Esperando o SSH
@@ -77,4 +82,4 @@
   with_items: "{{ ec2.instances }}"
   args:
     tags:
-      Name: ansible-{{ item.ami_launch_index|int + 1 }}
+      Name: Ansible-{{ item.ami_launch_index|int + 1 }}

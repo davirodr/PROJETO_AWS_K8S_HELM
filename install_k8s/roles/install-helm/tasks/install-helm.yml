@@ -1,18 +1,31 @@
 - name: Instalando Helm
   shell: curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
+- name: Sleep for 10 seconds and continue with play
+  wait_for:
+    timeout: 10
+
 - name: Adicionando Repo Helm
-  command: 
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com/ --force-update
-    helm repo add nginx https://helm.nginx.com/stable --force-update
+  shell: helm repo add stable 'https://kubernetes-charts.storage.googleapis.com/' --force-update
+
+
+- name: Adicionando Repo nginx
+  shell: helm repo add nginx 'https://helm.nginx.com/stable' --force-update
 
 - name: Update do Repo Helm
-  command: 
-    helm repo update
+  shell: helm repo update
+
+- name: Sleep for 10 seconds and continue with play
+  wait_for:
+    timeout: 10
 
 - name: Instando Nginx de Teste com Helm
   command:
     helm install my-ingress-controller nginx/nginx-ingress
+
+- name: Sleep for 10 seconds and continue with play
+  wait_for:
+    timeout: 10    
 
 - name: Removendo Nginx de Teste
   command:
