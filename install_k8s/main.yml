@@ -27,5 +27,11 @@
   gather_facts: no
   user: ubuntu
   roles:
-    - {role: install-helm , tags: ["install_helm"] }    
+    - {role: install-helm , tags: ["install_helm_role"] }    
 
+- hosts: k8s-master
+  become: yes
+  gather_facts: no
+  user: ubuntu
+  roles:
+    - {role: install-monit-tools , tags: ["install_monit_role"] }   
